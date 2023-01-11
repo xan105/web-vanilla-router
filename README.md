@@ -22,7 +22,7 @@ router
 })
 //Parameterized routes
 .on("/user/:id", (event, url, param) => {
-  const id = { param };
+  const { id } = param;
   //do something
 })
 //Optional "not found" hook
