@@ -105,31 +105,21 @@ A route is unique and has one handler.<br/>
 The `on()` method is chainable.
 
 ```js
-.on("/foo/bar", ()=>{
+.on("/foo/bar", (event, url, param)=>{
   //render logic
 })
-.on("/bar/ffo", async()=>{
+.on("/bar/foo", async(event, url, param)=>{
   //render logic
 })
 ```
 
 Handler is bind to the following arguments:
 
-```ts
-{
-  event: object, //NavigateEvent
-  url: object, //URL
-  param: object
-}
-```
-
-Where:
-
-- `event` 
+- `event`
 
 is the corresponding [📖 NavigateEvent](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent).<br/>
 This exposes the NavigateEvent object instance and all its goodies.<br/>
-For example if it makes sense to scroll earlier, you can call `event.scroll()` [(📖 NavigateEvent.scroll())](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent/scroll)
+For example if it makes sense to scroll earlier, you can call `event.scroll()` [📖 NavigateEvent.scroll()](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent/scroll)
 
 - `url` 
 
@@ -160,7 +150,8 @@ If you do not add a handler to this route navigation won't be intercepted.
 
 #### `off(path: string)`
 
-Remove a route from the router.
+Remove a route from the router.<br/>
+The `off()` method is chainable.
 
 #### `navigate(path: string)`
 
