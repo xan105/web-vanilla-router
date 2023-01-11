@@ -148,7 +148,7 @@ When using parameterized route `param` will expose said parameter(s) in a key/va
 
 If you do not add a handler to this route navigation won't be intercepted.
 
-#### `off(path: string)`
+#### `off(path: string | number)`
 
 Remove a route from the router.<br/>
 The `off()` method is chainable.
