@@ -21,12 +21,12 @@ router
   //do something
 })
 //Parameterized routes
-.on("/user/:id", (event, url, param){
+.on("/user/:id", (event, url, param) => {
   const id = { param };
   //do something
 })
 //Optional "not found" hook
-.on(404, (event, url){
+.on(404, (event, url) => {
   console.error("not found !")
 })
 .listen();
@@ -151,7 +151,7 @@ When using parameterized route `param` will expose said parameter(s) in a key/va
 💡 There is a special route `404` that you can **optionally** add a handler to when you need to handle cases where no match is found.
 
 ```js
-.on(404, (event, url){ 
+.on(404, (event, url)=>{ 
   //no match found
 })
 ```
