@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Anthony Beaumont">
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline';
+    ">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <main>
+      <ul>
+        <li><a href="/test">/test</a></li>
+        <li><a href="/user/foo">/user/:id</a></li>
+        <li><a href="/user/foo/bar">/user/:id/:subid</a></li>
+        <li><a href="/abcd">404</a></li>
+        <li><a href="https://google.com" target="_blank">external</a></li>
+      </ul>
+    </main>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "@xan105/vanilla-router": "../dist/router.min.js"
+        }
+      }
+    </script>
+    <script src="index.js" type="module"></script>
+  </body>
+</html>
