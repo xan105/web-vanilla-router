@@ -1,7 +1,7 @@
 About
 =====
 
-Simple Vanilla JS router based on the [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API).<br/>
+Simple Vanilla JS router based on the [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API) and [URLPattern API](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern).<br/>
 
 📦 Scoped `@xan105` packages are for my own personal use but feel free to use them.
 
@@ -15,7 +15,7 @@ const router = new Router();
 
 router
 .on("/", function(event, url){
-  //do something
+  //do something on page's first load
 })
 .on("/about", async(event, url) => {
   //do something
@@ -81,52 +81,82 @@ API
 
 ## Named export
 
-### `Router(): Class`
+### `Router(option?: object): Class`
+
+_extends [EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget)_
+
+**Events**
+
+`error({ detail: { error: string } })`
+
+This event is dispatched when an error has occured. 
+
+`will-navigate({ detail: { url: URL } })`
+
+This event is dispatched when the router is about to navigate to one of its route.
 
 **Options**
 
-- autoFocus:? boolean (true)
+- `autoFocus:? boolean` (true)
  
 Defines the navigation's focus behavior (automatic or manual).<br/>
 When enabled the browser will focus the first element with the autofocus attribute, or the <body> element if no element has autofocus set.
 
-- autoScroll:? boolean (true)
+- `autoScroll:? boolean` (true)
 
 Defines the navigation's scrolling behavior (automatic or manual).<br/>
 When enabled the browser will handle the scrolling for example restoring the scroll position to the same place as last time if the page is reloaded or a page in the history is revisited.
 
+- `autoFire:? boolean` (true)
+
+Triggers a navigate event for the default route `/` on a page's first load. 
+
+- `sensitive:? boolean` (true)
+
+Enables case-insensitive route matching when set to `false`.
+
+
 **Methods**
 
-#### `on(path: string | number, handler: (async)function)`
+#### `on(path: string | number, handler: (async)function): Router`
 
-Add a route to the router.
+Add a route to the router.<br/>
 
 A route is unique and has one handler.<br/>
-The `on()` method is chainable.
+Please see the [URLPattern API](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API) for possible pattern syntax.
+
+💡 The `on()` method is chainable.
+
+Example:
 
 ```js
 .on("/foo/bar", (event, url, param)=>{
   //render logic
 })
-.on("/bar/foo", async(event, url, param)=>{
+
+.on("/articles/:id", async(event, url, param)=>{
   //render logic
 })
 ```
 
-Handler is bind to the following arguments:
+Handler function is bind to the following arguments:
 
-- `event`
+```ts
+handler(event: NavigateEvent, url: URL, param: object)
+```
 
-is the corresponding [📖 NavigateEvent](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent).<br/>
+- `event: NavigateEvent`
+
+The corresponding [📖 NavigateEvent](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent).<br/>
 This exposes the NavigateEvent object instance and all its goodies.<br/>
 For example if it makes sense to scroll earlier, you can call `event.scroll()` [📖 NavigateEvent.scroll()](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent/scroll)
 
-- `url` 
+- `url: URL` 
 
-is the corresponding [📖 URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) object instance.<br/>
+The corresponding [📖 URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) object instance.<br/>
 So you have easy access to things like _href, pathname, searchParams, ..._
 
-- `param`
+- `param: object`
 
 The parameterized routes have paths that contain dynamic parts _("/articles/:id")_.<br/>
 When using parameterized route `param` will expose said parameter(s) in a key/value pair.
@@ -137,7 +167,6 @@ When using parameterized route `param` will expose said parameter(s) in a key/va
 })
 ```
 
-
 💡 There is a special route `404` that you can **optionally** add a handler to when you need to handle cases where no match is found.
 
 ```js
@@ -146,34 +175,46 @@ When using parameterized route `param` will expose said parameter(s) in a key/va
 })
 ```
 
-If you do not add a handler to this route navigation won't be intercepted.
+If you do not add a handler to this special route navigation won't be intercepted.
 
-#### `off(path: string | number)`
+#### `off(path: string | number): Router`
 
-Remove a route from the router.<br/>
-The `off()` method is chainable.
+Remove a route from the router.
 
-#### `navigate(path: string)`
+💡 The `off()` method is chainable.
 
-Short hand to [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate).<br/>
-But does nothing _(return undefined)_ if the route doesn't exist and<br/>
-if the route is the current route it will replace the current NavigationHistoryEntry
+#### `navigate(path?: string): void | object`
 
-#### `current()`
+Navigate to the given route if it exists.<br/>
+`path` equals the default route `/` when omitted.<br/>
+If the target of the navigation is the current route it will replace the current NavigationHistoryEntry.<br/>
 
-Short hand to [Navigation.currentEntry](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/currentEntry).
-  
-#### `history()`
+Returns the object of [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate) if a navigation occurs.
 
-Short hand to [Navigation.entries()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/entries).
+#### `back(): void`
 
-#### `listen()`
+Navigates backwards by one entry in the navigation history, if possible.
+
+#### `forward(): void`
+
+Navigates forwards by one entry in the navigation history, if possible.
+
+#### `listen(): Router`
 
 Start the router logic by listening to the [navigate](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate_event) event and intercept when needed.
 
-Docs 🤓
-=======
+💡 The `listen()` method is chainable.
 
-📖 https://developer.chrome.com/docs/web-platform/navigation-api<br/>
-📖 https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API<br/> 
-📖 https://github.com/WICG/navigation-api
+**Properties**
+
+#### `routes: object` (read only)
+
+The routers' routes.
+
+#### `current: NavigationHistoryEntry` (read only)
+
+Short hand to [Navigation.currentEntry](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/currentEntry).
+  
+#### `history: NavigationHistoryEntry[]` (read only)
+
+Short hand to [Navigation.entries()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/entries).
