@@ -1,7 +1,7 @@
 About
 =====
 
-Simple Vanilla JS router based on the [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API) and [URLPattern API](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern).<br/>
+Simple Vanilla JS router based on the 📖 [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API) and 📖 [URLPattern API](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern).<br/>
 
 📦 Scoped `@xan105` packages are for my own personal use but feel free to use them.
 
@@ -83,7 +83,7 @@ API
 
 ### `Router(option?: object): Class`
 
-_extends [EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget)_
+_extends 📖 [EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget)_
 
 **Events**
 
@@ -123,7 +123,7 @@ Enables case-insensitive route matching when set to `false`.
 Add a route to the router.<br/>
 
 A route is unique and has one handler.<br/>
-Please see the [URLPattern API](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API) for possible pattern syntax.
+Please see the 📖 [URLPattern API](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API) for possible pattern syntax.
 
 💡 The `on()` method is chainable.
 
@@ -147,13 +147,13 @@ handler(event: NavigateEvent, url: URL, param: object)
 
 - `event: NavigateEvent`
 
-The corresponding [📖 NavigateEvent](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent).<br/>
+The corresponding 📖 [NavigateEvent](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent).<br/>
 This exposes the NavigateEvent object instance and all its goodies.<br/>
-For example if it makes sense to scroll earlier, you can call `event.scroll()` [📖 NavigateEvent.scroll()](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent/scroll)
+For example if it makes sense to scroll earlier, you can call `event.scroll()` 📖 [NavigateEvent.scroll()](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent/scroll)
 
 - `url: URL` 
 
-The corresponding [📖 URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) object instance.<br/>
+The corresponding 📖 [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) object instance.<br/>
 So you have easy access to things like _href, pathname, searchParams, ..._
 
 - `param: object`
@@ -189,7 +189,7 @@ Navigate to the given route if it exists.<br/>
 `path` equals the default route `/` when omitted.<br/>
 If the target of the navigation is the current route it will replace the current NavigationHistoryEntry.<br/>
 
-Returns the object of [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate) if a navigation occurs.
+Returns the object of 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate) if a navigation occurs.
 
 #### `back(): void`
 
@@ -201,7 +201,7 @@ Navigates forwards by one entry in the navigation history, if possible.
 
 #### `listen(): Router`
 
-Start the router logic by listening to the [navigate](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate_event) event and intercept when needed.
+Start the router logic by listening to the 📖 [navigate](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate_event) event and intercept when needed.
 
 💡 The `listen()` method is chainable.
 
@@ -213,8 +213,8 @@ The routers' routes.
 
 #### `current: NavigationHistoryEntry` (read only)
 
-Short hand to [Navigation.currentEntry](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/currentEntry).
+Short hand to 📖 [Navigation.currentEntry](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/currentEntry).
   
 #### `history: NavigationHistoryEntry[]` (read only)
 
-Short hand to [Navigation.entries()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/entries).
+Short hand to 📖 [Navigation.entries()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/entries).

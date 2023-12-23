@@ -1,13 +1,17 @@
 {
   "name": "@xan105/vanilla-router",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Simple Vanilla JS router based on the Navigation API",
   "type": "module",
   "exports": "./lib/index.js",
   "browser": "./dist/router.min.js",
+  "files": [
+    "/dist",
+    "/lib"
+  ],
   "config": {
-    "root": "./",
-    "404": "test/404.html"
+    "404": "test/404.html",
+    "root": "./"
   },
   "scripts": {
     "lint": "eslint \"./lib/**/*.js\"",
@@ -54,7 +58,7 @@
   ],
   "devDependencies": {
     "@xan105/qwebsrv": "^1.0.5",
-    "esbuild": "^0.19.5",
-    "eslint": "^8.53.0"
+    "esbuild": "^0.19.10",
+    "eslint": "^8.56.0"
   }
 }

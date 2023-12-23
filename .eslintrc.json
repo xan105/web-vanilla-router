@@ -22,6 +22,7 @@
     "no-alert": "warn",
     "no-eval": "error",
     "require-await": "warn",
-    "no-useless-escape": "warn"
+    "no-useless-escape": "warn",
+    "no-undef": "warn"
   }
 }
