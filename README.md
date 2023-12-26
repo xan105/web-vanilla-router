@@ -15,7 +15,7 @@ const router = new Router();
 
 router
 .on("/", function(event, url){
-  //do something on page's first load
+  //do something
 })
 .on("/about", async(event, url) => {
   //do something
@@ -167,6 +167,8 @@ When using parameterized route `param` will expose said parameter(s) in a key/va
 })
 ```
 
+**Handling no route found**
+
 💡 There is a special route `404` that you can **optionally** add a handler to when you need to handle cases where no match is found.
 
 ```js
@@ -207,7 +209,7 @@ Start the router logic by listening to the 📖 [navigate](https://developer.moz
 
 **Properties**
 
-#### `routes: object` (read only)
+#### `routes: string[]` (read only)
 
 The routers' routes.
 
