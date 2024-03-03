@@ -95,6 +95,10 @@ This event is dispatched when an error has occured.
 
 This event is dispatched when the router is about to navigate to one of its route.
 
+`did-navigate({ detail: { url: URL } })`
+
+This event is dispatched when navigation is done.
+
 **Options**
 
 - `autoFocus:? boolean` (true)
@@ -191,15 +195,19 @@ Navigate to the given route if it exists.<br/>
 `path` equals the default route `/` when omitted.<br/>
 If the target of the navigation is the current route it will replace the current NavigationHistoryEntry.<br/>
 
-Returns the object of 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate) if a navigation occurs.
+Returns the object of 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate#return_value) if a navigation occurs.
 
-#### `back(): void`
+#### `back(): void | object`
 
 Navigates backwards by one entry in the navigation history, if possible.
 
-#### `forward(): void`
+Returns the object of 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate#return_value) if a navigation occurs.
+
+#### `forward(): void | object`
 
 Navigates forwards by one entry in the navigation history, if possible.
+
+Returns the object of 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate#return_value) if a navigation occurs.
 
 #### `listen(): Router`
 
