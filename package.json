@@ -17,7 +17,7 @@
     "lint": "eslint \"./lib/**/*.js\"",
     "bundle": "npm run-script bundle:pretty && npm run-script bundle:min",
     "bundle:pretty": "esbuild \"./lib/index.js\" --bundle --platform=browser --target=esnext --format=esm --outfile=\"./dist/router.js\"",
-    "bundle:min": "esbuild \"./lib/index.js\" --bundle --minify --platform=browser --target=esnext --format=esm --outfile=\"./dist/router.min.js\"",
+    "bundle:min": "esbuild \"./lib/index.js\" --bundle --minify --legal-comments=none --platform=browser --target=esnext --format=esm --outfile=\"./dist/router.min.js\"",
     "test": "start http://localhost/test && websrv"
   },
   "keywords": [
