@@ -111,6 +111,11 @@ When enabled the browser will focus the first element with the autofocus attribu
 Defines the navigation's scrolling behavior (automatic or manual).<br/>
 When enabled the browser will handle the scrolling for example restoring the scroll position to the same place as last time if the page is reloaded or a page in the history is revisited.
 
+- `deferredCommit:? boolean` (false)
+
+The default behavior of immediately "committing" (i.e., updating location.href and navigation.currentEntry) works well for most situations, but some may find they do not want to immediately update the URL.
+When deferred commit is used, the navigation will commit when `e.commit()` is called or when a route's handler fulfills / terminates and `e.commit()` hasn't yet been called (fallback).
+
 - `autoFire:? boolean` (true)
 
 Triggers a navigate event for the default route `/` on a page's first load. 
