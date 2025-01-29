@@ -32,6 +32,26 @@ router
 .listen();
 ```
 
+OpenGraph - Metadata
+
+```js
+import { Router, updateMetadata } from "./path/to/router.js"
+
+const router = new Router();
+
+router.on("/blog/:id", (event, url, param) => {
+  updateMetadata([
+    { name: "title", content: "My website" },
+    { name: "type", content: "article", details: { 
+      author: "xan105",
+      section : "Technology"
+    }}
+  ]);
+  
+  //do something
+}).listen();
+```
+
 Install
 =======
 
@@ -115,6 +135,8 @@ When enabled the browser will handle the scrolling for example restoring the scr
 
 The default behavior of immediately "committing" (i.e., updating location.href and navigation.currentEntry) works well for most situations, but some may find they do not want to immediately update the URL.
 When deferred commit is used, the navigation will commit when `e.commit()` is called or when a route's handler fulfills / terminates and `e.commit()` hasn't yet been called (fallback).
+
+NB: _Available in Chromium >= 114.0.5696.0 behind the experimental web platform features flag._
 
 - `autoFire:? boolean` (true)
 
@@ -233,3 +255,35 @@ Short hand to 📖 [Navigation.currentEntry](https://developer.mozilla.org/en-US
 #### `history: NavigationHistoryEntry[]` (read only)
 
 Short hand to 📖 [Navigation.entries()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/entries).
+
+### `updateMetadata(data: {name: string, content:string, details?: object}[]): void`
+
+Update the document's metadata: title, description and Open Graph protocol.
+
+Example:
+
+```js
+  updateMetadata([
+    { name: "title", content: "Xan" },
+    { name: "description", content: "Lorem Ipsum" },
+    { name: "image", content: "http://localhost/avatar.png" },
+    { name: "url", content: "http://localhost" },
+    { name: "type", content: "website" }
+  ]);
+```
+
+⬇️
+
+```html
+<head prefix="og: https://ogp.me/ns# website: https://ogp.me/ns/website#">
+  <title>Xan</title>
+  <meta name="description" content="Lorem Ipsum" />
+  <meta property="og:title" content="Xan" />
+  <meta property="og:description" content="Lorem Ipsum" />
+  <meta property="og:image" content="http://localhost/avatar.png" />
+  <meta property="og:url" content="http://localhost" />
+  <meta property="og:type" content="website" />
+</head>
+```
+
+📖 [The Open Graph protocol](https://ogp.me/)

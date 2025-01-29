@@ -26,7 +26,8 @@
     "navigation",
     "spa",
     "browser",
-    "esbuild"
+    "esbuild",
+    "OpenGraph"
   ],
   "author": {
     "name": "Anthony Beaumont",

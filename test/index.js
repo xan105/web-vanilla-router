@@ -1,16 +1,31 @@
-import { Router } from "@xan105/vanilla-router";
+import { Router, updateMetadata } from "@xan105/vanilla-router";
 
 const router = new Router({ autoFire: false });
 
 router.addEventListener("error", ({detail})=> { console.error(detail) });
 router.addEventListener("will-navigate", ({detail})=> { console.log("will-navigate", detail) });
+router.addEventListener("did-navigate", ({detail})=> { console.info("did-navigate", detail) });
 
 router
 .on("/", function(event, url){
   console.log("hello world");
+  
+  updateMetadata([
+    { name: "title", content: "Xan" },
+    { name: "description", content: "Lorem Ipsum" },
+    { name: "url", content: "http://localhost" },
+    { name: "type", content: "website" }
+  ]);
 })
 .on("/test", async(event, url) => {
   console.log(event, url);
+  
+  updateMetadata([
+    { name: "title", content: "Xan - test" },
+    { name: "description", content: "Lorem Ipsum" },
+    { name: "url", content: "http://localhost" },
+    { name: "type", content: "website" }
+  ]);
 })
 //Parameterized routes
 .on("/user/:id", (event, url, param) => {
@@ -21,6 +36,11 @@ router
   const { id, subid } = param;
   console.log(id, subid);
 })
+//Options overrides
+.on("/options", (event, url) => {
+  console.log(event, url);
+  event.commit();
+}, { deferredCommit: true })
 //Optional "not found" hook
 .on(404, (event, url) => {
   console.error("no route found ! (404)");
