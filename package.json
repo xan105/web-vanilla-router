@@ -1,7 +1,7 @@
 {
   "name": "@xan105/vanilla-router",
   "version": "0.3.0",
-  "description": "Simple Vanilla JS router based on the Navigation API",
+  "description": "Simple Vanilla JS router based on the Navigation API and URLPattern API",
   "type": "module",
   "exports": "./lib/index.js",
   "browser": "./dist/router.min.js",

@@ -43,7 +43,7 @@ router.on("/blog/:id", (event, url, param) => {
   updateMetadata([
     { name: "title", content: "My website" },
     { name: "type", content: "article", details: { 
-      author: "xan105",
+      modified_time: "2025-01-21T00:00:00Z",
       section : "Technology"
     }}
   ]);
