@@ -140,12 +140,56 @@ NB: _Available in Chromium >= 114.0.5696.0 behind the experimental web platform 
 
 - `autoFire:? boolean` (true)
 
-Triggers a navigate event for the default route `/` on a page's first load. 
+Triggers a navigate event for the current path on a page's first load.<br/>
+The default behavior is intended for when all requests are routed to your SPA.
+
+[Caddy](https://github.com/caddyserver/caddy) example:
+
+```
+foo.com {
+  root * /srv/www/foo.com
+  try_files {path} /index.html
+  file_server
+}
+```
+
+If you are using a "400.html" redirect trick like when hosting on Github's Page.
+You should not use this and instead handle it yourself.
+
+<details><summary>Example:</summary>
+**404.html**:
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script>
+      sessionStorage.redirect = location.pathname;
+    </script>
+    <meta http-equiv="refresh" content="0;URL='/'"></meta>
+  </head>
+</html>
+```
+
+**navigation.js**:
+
+```js
+const router = new Router({ autoFire: false });
+router.on("/", ()=>{ //some route })
+router.listen()
+
+const { redirect } = sessionStorage;
+delete sessionStorage.redirect;
+
+const url = redirect !== location.pathname ? redirect : "/"
+router.navigate(url, { history: "replace" });
+```
+</details>
 
 - `sensitive:? boolean` (true)
 
 Enables case-insensitive route matching when set to `false`.
-
 
 **Methods**
 
@@ -216,13 +260,11 @@ Remove a route from the router.
 
 💡 The `off()` method is chainable.
 
-#### `navigate(path?: string): void | object`
+#### `navigate(url: string, options: object): object`
 
-Navigate to the given route if it exists.<br/>
-`path` equals the default route `/` when omitted.<br/>
-If the target of the navigation is the current route it will replace the current NavigationHistoryEntry.<br/>
+Navigate to the specified url.
 
-Returns the object of 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate#return_value) if a navigation occurs.
+Short hand to 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate).
 
 #### `back(): void | object`
 
