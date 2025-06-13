@@ -157,6 +157,7 @@ If you are using a "400.html" redirect trick like when hosting on Github's Page.
 You should not use this and instead handle it yourself.
 
 <details><summary>Example:</summary>
+
 **404.html**:
 
 ```html

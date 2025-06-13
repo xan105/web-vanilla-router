@@ -6,7 +6,8 @@ function clearMetadata() {
     ...document.head.querySelectorAll('meta[property^="book:"]'),
     ...document.head.querySelectorAll('meta[property^="profile:"]'),
     ...document.head.querySelectorAll('meta[property^="video:"]'),
-    ...document.head.querySelectorAll('meta[property^="music:"]')
+    ...document.head.querySelectorAll('meta[property^="music:"]'),
+    ...document.head.querySelectorAll('link[rel^="canonical"]')
   ].forEach((el) => document.head.removeChild(el));
 }
 function updateMetadata(data) {
@@ -26,9 +27,16 @@ function updateMetadata(data) {
         element2.setAttribute("content", content);
         break;
       }
+      case "url": {
+        const element2 = document.head.querySelector(`link[rel="canonical"]`) ?? document.head.appendChild(document.createElement("link"));
+        element2.setAttribute("rel", "canonical");
+        element2.setAttribute("href", content);
+        break;
+      }
       case "type": {
         const schema = `${content}: https://ogp.me/ns/${content}#`;
         prefix.push(schema);
+        break;
       }
     }
     const element = document.createElement("meta");
@@ -36,15 +44,18 @@ function updateMetadata(data) {
     element.setAttribute("content", content);
     document.head.appendChild(element);
     for (const [key, value] of Object.entries(details ?? {})) {
-      const element2 = document.createElement("meta");
-      if (name === "type") {
-        const [type] = content.split(".");
-        element2.setAttribute("property", type + ":" + key);
-      } else {
-        element2.setAttribute("property", "og:" + name + ":" + key);
+      const array = Array.isArray(value) ? value : [value];
+      for (const entry of array) {
+        const element2 = document.createElement("meta");
+        if (name === "type") {
+          const [type] = content.split(".");
+          element2.setAttribute("property", type + ":" + key);
+        } else {
+          element2.setAttribute("property", "og:" + name + ":" + key);
+        }
+        element2.setAttribute("content", entry);
+        document.head.appendChild(element2);
       }
-      element2.setAttribute("content", value);
-      document.head.appendChild(element2);
     }
   }
   document.head.setAttribute("prefix", prefix.join(" "));
@@ -81,12 +92,8 @@ var Router = class extends EventTarget {
     if (navigation.canGoForward)
       return navigation.forward();
   }
-  navigate(path = "/") {
-    if (typeof path === "string" && path.length > 0 && this.#routes[path]) {
-      return navigation.navigate(path, {
-        history: location.pathname === path ? "replace" : "auto"
-      });
-    }
+  navigate(url, options) {
+    return navigation.navigate(url, options);
   }
   on(path, handler, options = {}) {
     if (typeof handler !== "function")
@@ -157,8 +164,9 @@ var Router = class extends EventTarget {
         handler: handler.bind(this, e, url, param ?? {})
       });
     });
-    if (this.autoFire === true)
-      this.navigate();
+    if (this.autoFire === true) {
+      this.navigate(location.pathname, { history: "replace" });
+    }
     return this;
   }
 };
