@@ -11,8 +11,7 @@ function clearMetadata() {
   ].forEach((el) => document.head.removeChild(el));
 }
 function updateMetadata(data) {
-  if (!Array.isArray(data))
-    return;
+  if (!Array.isArray(data)) return;
   const prefix = ["og: https://ogp.me/ns/#"];
   clearMetadata();
   for (const { name, content, details } of data) {
@@ -85,19 +84,16 @@ var Router = class extends EventTarget {
     return navigation.entries();
   }
   back() {
-    if (navigation.canGoBack)
-      return navigation.back();
+    if (navigation.canGoBack) return navigation.back();
   }
   forward() {
-    if (navigation.canGoForward)
-      return navigation.forward();
+    if (navigation.canGoForward) return navigation.forward();
   }
   navigate(url, options) {
     return navigation.navigate(url, options);
   }
   on(path, handler, options = {}) {
-    if (typeof handler !== "function")
-      return this;
+    if (typeof handler !== "function") return this;
     if (typeof path === "string" && path.length > 0) {
       this.#routes[path] = { handler, options };
     } else if (path === 404) {
@@ -134,7 +130,7 @@ var Router = class extends EventTarget {
     navigation.addEventListener("navigateerror", (e) => {
       const url = new URL(e.currentTarget.currentEntry.url);
       this.dispatchEvent(new CustomEvent("error", {
-        detail: { error: e.message, url }
+        detail: { error: e.error.message, url }
       }));
     });
     navigation.addEventListener("navigatesuccess", (e) => {
@@ -144,8 +140,7 @@ var Router = class extends EventTarget {
       }));
     });
     navigation.addEventListener("navigate", (e) => {
-      if (!e.canIntercept || e.hashChange || e.downloadRequest !== null || e.formData)
-        return;
+      if (!e.canIntercept || e.hashChange || e.downloadRequest || e.formData) return;
       const url = new URL(e.destination.url);
       const { handler, options, param } = this.#match(url.pathname) ?? {};
       if (!handler) {
