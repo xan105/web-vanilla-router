@@ -59,39 +59,62 @@ Install
 npm i @xan105/vanilla-router
 ```
 
-### Optional 
+💡 The bundled library and its minified version can be found in the `./dist` folder.
 
-Create an importmap:
+### Via importmap
 
-```json
-{
-  "imports": {
-    "@xan105/vanilla-router": "./path/to/node_modules/@xan105/vanilla-router/dist/router.min.js"
-  }
-}
-```
-
-index.html:
+Create an importmap and add it to your html:
 
 ```html
-  <script src="./importmap.json" type="importmap"></script>
-  <script src="./index.js" type="module"></script>
+    <script type="importmap">
+    {
+      "imports": {
+        "@xan105/vanilla-router": "./path/to/node_modules/@xan105/vanilla-router/dist/router.min.js"
+      }
+    }
+    </script>
+    <script type="module">
+      import { Router } from "@xan105/vanilla-router"
+      const router = new Router();
+      router
+      .on("/path/to/route", (event, url)=>{
+        //Do a flip()
+      })
+      .listen();
+    </script>
   </body>
 </html>
 ```
 
-index.js:
+Compatibility
+=============
 
-```js
-import { Router } from "@xan105/vanilla-router"
+As of this writing, Firefox and Safari still [lacks support for the Navigation API](https://caniuse.com/mdn-api_navigation).
 
-const router = new Router();
+I recommend the excellent Navigation API shim: [@virtualstate/navigation](https://github.com/virtualstate/navigation) in the meantime.
 
-router
-.on("/path/to/route", (event, url)=>{
-  //Do a flip()
-})
-.listen();
+**Install & build**
+
+```console
+npm i -D @virtualstate/navigation esbuild
+npx esbuild "./node_modules/@virtualstate/navigation/esnext/polyfill.js" --bundle --minify --legal-comments=none --platform=browser --target=esnext --format=esm --outfile="navigation.min.js"
+```
+
+**Usage (Via importmap)**
+
+```html
+    <script type="importmap">
+    {
+      "imports": {
+        "@virtualstate/navigation/polyfill": "./navigation.min.js"
+      }
+    }
+    </script>
+    <script type="module">
+      if (!("navigation" in window)) await import("@virtualstate/navigation/polyfill");
+    </script>
+  </body>
+</html>
 ```
 
 API
@@ -107,7 +130,7 @@ _extends 📖 [EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/Eve
 
 **Events**
 
-`error({ detail: { error: string } })`
+`error({ detail: { error: string, url: URL } })`
 
 This event is dispatched when an error has occured. 
 
