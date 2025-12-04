@@ -5,6 +5,8 @@ Simple Vanilla JS router based on the 📖 [Navigation API](https://developer.mo
 
 📦 Scoped `@xan105` packages are for my own personal use but feel free to use them.
 
+🤔 Curious to see it in real use? This package powers [my personal blog](https://xan105.com/).
+
 Example
 =======
 
@@ -154,12 +156,12 @@ When enabled the browser will focus the first element with the autofocus attribu
 Defines the navigation's scrolling behavior (automatic or manual).<br/>
 When enabled the browser will handle the scrolling for example restoring the scroll position to the same place as last time if the page is reloaded or a page in the history is revisited.
 
-- `deferredCommit:? boolean` (false)
+- 🧪 `deferredCommit:? boolean` (false)
 
 The default behavior of immediately "committing" (i.e., updating location.href and navigation.currentEntry) works well for most situations, but some may find they do not want to immediately update the URL.
-When deferred commit is used, the navigation will commit when `e.commit()` is called or when a route's handler fulfills / terminates and `e.commit()` hasn't yet been called (fallback).
+When deferred commit is used, the navigation will commit when `event.commit()` is called or when a route's handler fulfills / terminates and `event.commit()` hasn't yet been called (fallback).
 
-NB: _Available in Chromium >= 114.0.5696.0 behind the experimental web platform features flag._
+NB: 🧪 _Available in Chromium behind the experimental web platform features flag._
 
 - `autoFire:? boolean` (true)
 
@@ -211,9 +213,27 @@ router.navigate(url, { history: "replace" });
 ```
 </details>
 
-- `sensitive:? boolean` (true)
+- `sensitive?: boolean` (true)
 
 Enables case-insensitive route matching when set to `false`.
+
+- `ignoreAssets?: boolean` (true)
+
+Ignore same-origin assets. 
+
+When `true`, if a same-origin URL has a file extension then the navigation won't be intercepted.
+
+- 🧪 `manualOverride?: boolean` (true)
+
+This library handles when navigation shouldn't be intercepted. But sometimes you just need a manual override!
+
+When `true`, every navigation triggered by an element with the `data-navigation` attribute set to `false` won't be intercepted, eg:
+
+```html
+<a href="/some/server/route/" data-navigation="false">Link</a>
+```
+
+NB: 🧪 _This feature requires the `event.sourceElement` available in Chromium behind the experimental web platform features flag._
 
 **Methods**
 
