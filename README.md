@@ -310,6 +310,23 @@ Navigate to the specified url.
 
 Short hand to 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate).
 
+#### `redirect(url: string): void`
+
+Redirect to the specified url by aborting the current navigation, navigating to the given URL and replacing the current `NavigationHistoryEntry` (to prevent "back button loop").
+
+This is a sugar helper function for when you want to redirect from a route handler to another.
+
+**Example**
+
+```js
+.on("/foo", function(){ 
+  this.redirect("/bar");
+})
+.on("/bar", function(){ 
+  console.log("Hello!")
+})
+```
+
 #### `back(): void | object`
 
 Navigates backwards by one entry in the navigation history, if possible.

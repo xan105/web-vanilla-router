@@ -22,6 +22,12 @@ router
     { name: "type", content: "website" }
   ]);
 })
+.on("/redirect", function(){
+  this.redirect("/hello");
+})
+.on("/hello", (event, url) => {
+  console.log("hello world!")
+})
 .on("/test", async(event, url) => {
   console.log(event, url);
   
