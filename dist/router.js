@@ -70,6 +70,8 @@ var Router = class extends EventTarget {
     this.#notFound = Symbol("404");
     this.autoFire = option?.autoFire ?? true;
     this.sensitive = option?.sensitive ?? true;
+    this.ignoreAssets = option?.ignoreAssets ?? true;
+    this.manualOverride = option?.manualOverride ?? true;
     this.autoFocus = option?.autoFocus ?? true;
     this.autoScroll = option?.autoScroll ?? true;
     this.deferredCommit = option?.deferredCommit ?? false;
@@ -91,6 +93,10 @@ var Router = class extends EventTarget {
   }
   navigate(url, options) {
     return navigation.navigate(url, options);
+  }
+  redirect(url) {
+    navigation.navigate(url, { history: "replace" });
+    throw new DOMException("Abort", "AbortError");
   }
   on(path, handler, options = {}) {
     if (typeof handler !== "function") return this;
@@ -140,8 +146,9 @@ var Router = class extends EventTarget {
       }));
     });
     navigation.addEventListener("navigate", (e) => {
-      if (!e.canIntercept || e.hashChange || e.downloadRequest || e.formData) return;
+      if (!e.canIntercept || e.hashChange || e.downloadRequest || e.formData || this.manualOverride && e.sourceElement?.dataset?.navigation === "false") return;
       const url = new URL(e.destination.url);
+      if (this.ignoreAssets === true && /\.[^/]+$/.test(url.pathname)) return;
       const { handler, options, param } = this.#match(url.pathname) ?? {};
       if (!handler) {
         this.dispatchEvent(new CustomEvent("error", {

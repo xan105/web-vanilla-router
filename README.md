@@ -27,9 +27,19 @@ router
   const { id } = param;
   //do something
 })
+//Handler redirection
+.on("/admin", function(){
+  if (!isLoggedIn()){
+    this.redirect("/login");
+  }
+  //do something
+})
+.on("/login", function(){
+  //Authenticate
+})
 //Optional "not found" hook
 .on(404, (event, url) => {
-  console.error("not found !")
+  console.error("not found !");
 })
 .listen();
 ```
@@ -312,7 +322,7 @@ Short hand to 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/d
 
 #### `redirect(url: string): void`
 
-Redirect to the specified url by aborting the current navigation, navigating to the given URL and replacing the current `NavigationHistoryEntry` (to prevent "back button loop").
+Redirect to the specified URL by aborting the current navigation, navigating to the URL and replacing the current `NavigationHistoryEntry` (to prevent "back button loop").
 
 This is a sugar helper function for when you want to redirect from a route handler to another.
 
