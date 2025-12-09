@@ -1,7 +1,13 @@
 About
 =====
 
-Simple Vanilla JS router based on the 📖 [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API) and 📖 [URLPattern API](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern).<br/>
+Simple and modern Vanilla JS router based on the 📖 [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API) and 📖 [URLPattern API](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern).<br/>
+
+- Dependency free.
+- Parameterized routes and URL pattern matchers.
+- Handles navigation: just define your routes.
+- Optional "Not-found" handler.
+- Handler redirection: navigating between routes.
 
 📦 Scoped `@xan105` packages are for my own personal use but feel free to use them.
 
@@ -11,47 +17,57 @@ Example
 =======
 
 ```js
-import { Router } from "./path/to/router.js"
+import { Router } from "@xan105/vanilla-router"
 
 const router = new Router();
 
 router
 .on("/", function(event, url){
-  //do something
+  // do something
 })
 .on("/about", async(event, url) => {
-  //do something
+  // do something
 })
-//Parameterized routes
+
+// Parameterized routes
 .on("/user/:id", (event, url, param) => {
   const { id } = param;
-  //do something
+  // do something
 })
-//Handler redirection
+
+// Query parameters
+.on("/items?name=foo", (event, url) => {
+  const name = url.searchParams.get("name");
+  // do something
+})
+
+// Handler redirection
 .on("/admin", function(){
   if (!isLoggedIn()){
     this.redirect("/login");
   }
-  //do something
+  // do something
 })
 .on("/login", function(){
-  //Authenticate
+  // Authenticate
 })
-//Optional "not found" hook
+
+// Optional "not found" hook
 .on(404, (event, url) => {
   console.error("not found !");
 })
+
 .listen();
 ```
 
 OpenGraph - Metadata
 
 ```js
-import { Router, updateMetadata } from "./path/to/router.js"
+import { Router, updateMetadata } from "@xan105/vanilla-router"
 
 const router = new Router();
 
-router.on("/blog/:id", (event, url, param) => {
+router.on("/blog/:id", () => {
   updateMetadata([
     { name: "title", content: "My website" },
     { name: "type", content: "article", details: { 
@@ -60,7 +76,7 @@ router.on("/blog/:id", (event, url, param) => {
     }}
   ]);
   
-  //do something
+  // do something
 }).listen();
 ```
 
@@ -81,7 +97,7 @@ Create an importmap and add it to your html:
     <script type="importmap">
     {
       "imports": {
-        "@xan105/vanilla-router": "./path/to/node_modules/@xan105/vanilla-router/dist/router.min.js"
+        "@xan105/vanilla-router": "./node_modules/@xan105/vanilla-router/dist/router.min.js"
       }
     }
     </script>
@@ -90,7 +106,7 @@ Create an importmap and add it to your html:
       const router = new Router();
       router
       .on("/path/to/route", (event, url)=>{
-        //Do a flip()
+        // Do a flip()
       })
       .listen();
     </script>
