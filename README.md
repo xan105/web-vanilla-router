@@ -160,38 +160,38 @@ _extends 📖 [EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/Eve
 
 **Events**
 
-`error({ detail: { error: string, url: URL } })`
+  `error({ detail: { error: string, url: URL } })`
 
-This event is dispatched when an error has occured. 
+  This event is dispatched when an error has occured. 
 
-`will-navigate({ detail: { url: URL } })`
+  `will-navigate({ detail: { url: URL } })`
 
-This event is dispatched when the router is about to navigate to one of its route.
+  This event is dispatched when the router is about to navigate to one of its route.
 
-`did-navigate({ detail: { url: URL } })`
+  `did-navigate({ detail: { url: URL } })`
 
-This event is dispatched when navigation is done.
+  This event is dispatched when navigation is done.
 
 **Options**
 
-- `autoFocus:? boolean` (true)
+  - `autoFocus:? boolean` (true)
  
   Defines the navigation's focus behavior (automatic or manual).<br/>
   When enabled the browser will focus the first element with the autofocus attribute, or the <body> element if no element has autofocus set.
 
-- `autoScroll:? boolean` (true)
+  - `autoScroll:? boolean` (true)
 
   Defines the navigation's scrolling behavior (automatic or manual).<br/>
   When enabled the browser will handle the scrolling for example restoring the scroll position to the same place as last time if the page is  reloaded or a page in the history is revisited.
 
-- 🧪 `deferredCommit:? boolean` (false)
+  - 🧪 `deferredCommit:? boolean` (false)
 
   The default behavior of immediately "committing" (i.e., updating location.href and navigation.currentEntry) works well for most situations, but some may find they do not want to immediately update the URL.
   When deferred commit is used, the navigation will commit when `event.commit()` is called or when a route's handler fulfills / terminates and `event.commit()` hasn't yet been called (fallback).
 
   NB: 🧪 _Available in Chromium behind the experimental web platform features flag._
 
-- `autoFire:? boolean` (true)
+  - `autoFire:? boolean` (true)
 
   Triggers a navigate event for the current path on a page's first load.<br/>
   The default behavior is intended for when all requests are routed to your SPA.
@@ -241,17 +241,17 @@ This event is dispatched when navigation is done.
   ```
   </details>
 
-- `sensitive?: boolean` (true)
+  - `sensitive?: boolean` (true)
 
   Enables case-insensitive route matching when set to `false`.
 
-- `ignoreAssets?: boolean` (true)
+  - `ignoreAssets?: boolean` (true)
 
   Ignore same-origin assets. 
 
   When `true`, if a same-origin URL has a file extension then the navigation won't be intercepted.
 
-- 🧪 `manualOverride?: boolean` (true)
+  - 🧪 `manualOverride?: boolean` (true)
 
   This library handles when navigation shouldn't be intercepted. But sometimes you just need a manual override!
 
@@ -267,125 +267,125 @@ This event is dispatched when navigation is done.
 
 #### `on(path: string | number, handler: (async)function): Router`
 
-Add a route to the router.<br/>
+  Add a route to the router.<br/>
 
-A route is unique and has one handler.<br/>
-Please see the 📖 [URLPattern API](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API) for possible pattern syntax.
+  A route is unique and has one handler.<br/>
+  Please see the 📖 [URLPattern API](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API) for possible pattern syntax.
 
-💡 The `on()` method is chainable.
+  💡 The `on()` method is chainable.
 
-Example:
+  Example:
 
-```js
-.on("/foo/bar", (event, params) => {
-  //render logic
-})
+  ```js
+  .on("/foo/bar", (event, params) => {
+    //render logic
+  })
 
-.on("/articles/:id", async(event, params) => {
-  //render logic
-})
-```
+  .on("/articles/:id", async(event, params) => {
+    //render logic
+  })
+  ```
 
-Handler function is bind to the following arguments:
+  Handler function is bind to the following arguments:
 
-```ts
-handler(event: NavigateEvent, params: { searchParams: object, routeParams: object })
-```
+  ```ts
+  handler(event: NavigateEvent, params: { searchParams: object, routeParams: object })
+  ```
 
-  - `event: NavigateEvent`
+    - `event: NavigateEvent`
 
-    The corresponding 📖 [NavigateEvent](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent).<br/>
-    This exposes the NavigateEvent object instance and all its goodies.<br/>
+      The corresponding 📖 [NavigateEvent](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent).<br/>
+      This exposes the NavigateEvent object instance and all its goodies.<br/>
 
-    For example if it makes sense to scroll earlier, you can call `event.scroll()` 
-    📖 [NavigateEvent.scroll()](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent/scroll)
+      For example if it makes sense to scroll earlier, you can call `event.scroll()` 
+      📖 [NavigateEvent.scroll()](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent/scroll)
 
-  - `params: { searchParams: object, routeParams: object }`
-    
-    The query and route parameters represented in key/value pairs.
+    - `params: { searchParams: object, routeParams: object }`
+      
+      The query and route parameters represented in key/value pairs.
 
-    ```js
-    .on("/users/:id/:action", (event, { routeParams }) => {
-      console.log(routeParams); //{ id: "...", action: "..." }
-    })
+      ```js
+      .on("/users/:id/:action", (event, { routeParams }) => {
+        console.log(routeParams); //{ id: "...", action: "..." }
+      })
 
-    .on("/items", (event, { searchParams }) => {
-      console.log(searchParams); //{ foo: "bar" }
-    })
-    ```
+      .on("/items", (event, { searchParams }) => {
+        console.log(searchParams); //{ foo: "bar" }
+      })
+      ```
 
-**Handling no route found**
+  **Handling no route found**
 
-💡 There is a special route `404` that you can **optionally** add a handler to when you need to handle cases where no match is found.
+  💡 There is a special route `404` that you can **optionally** add a handler to when you need to handle cases where no match is found.
 
-```js
-.on(404, () => { 
-  //no match found
-})
-```
+  ```js
+  .on(404, () => { 
+    //no match found
+  })
+  ```
 
-If you do not add a handler to this special route navigation won't be intercepted.
+  If you do not add a handler to this special route navigation won't be intercepted.
 
 #### `off(path: string | number): Router`
 
-Remove a route from the router.
+  Remove a route from the router.
 
-💡 The `off()` method is chainable.
+  💡 The `off()` method is chainable.
 
 #### `navigate(url: string, options: object): object`
 
-Navigate to the specified url.
+  Navigate to the specified url.
 
-Short hand to 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate).
+  Short hand to 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate).
 
 #### `redirect(url: string): void`
 
-Redirect to the specified URL by aborting the current navigation, navigating to the URL and replacing the current `NavigationHistoryEntry` (to prevent "back button loop").
+  Redirect to the specified URL by aborting the current navigation, navigating to the URL and replacing the current `NavigationHistoryEntry` (to prevent "back button loop").
 
-This is a sugar helper function for when you want to redirect from a route handler to another.
+  This is a sugar helper function for when you want to redirect from a route handler to another.
 
-**Example**
+  **Example**
 
-```js
-.on("/foo", function(){ 
-  this.redirect("/bar");
-})
-.on("/bar", function(){ 
-  console.log("Hello!")
-})
-```
+  ```js
+  .on("/foo", function(){ 
+    this.redirect("/bar");
+  })
+  .on("/bar", function(){ 
+    console.log("Hello!")
+  })
+  ```
 
 #### `back(): void | object`
 
-Navigates backwards by one entry in the navigation history, if possible.
+  Navigates backwards by one entry in the navigation history, if possible.
 
-Returns the object of 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate#return_value) if a navigation occurs.
+  Returns the object of 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate#return_value) if a navigation occurs.
 
 #### `forward(): void | object`
 
-Navigates forwards by one entry in the navigation history, if possible.
+  Navigates forwards by one entry in the navigation history, if possible.
 
-Returns the object of 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate#return_value) if a navigation occurs.
+  Returns the object of 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate#return_value) if a navigation occurs.
 
 #### `listen(): Router`
 
-Start the router logic by listening to the 📖 [navigate](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate_event) event and intercept when needed.
+  Start the router logic by listening to the 📖 [navigate](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate_event) event and intercept when needed.
 
-💡 The `listen()` method is chainable.
+  💡 The `listen()` method is chainable.
 
 **Properties**
 
 #### `routes: string[]` (read only)
 
-The routers' routes.
+  The routers' routes.
 
 #### `current: NavigationHistoryEntry` (read only)
 
-Short hand to 📖 [Navigation.currentEntry](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/currentEntry).
+  Short hand to 📖 [Navigation.currentEntry](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/currentEntry).
   
 #### `history: NavigationHistoryEntry[]` (read only)
 
-Short hand to 📖 [Navigation.entries()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/entries).
+  Short hand to 📖 [Navigation.entries()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/entries).
 
 ### `updateMetadata(data: {name: string, content:string, details?: object}[]): void`
 
