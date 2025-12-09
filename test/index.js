@@ -12,7 +12,7 @@ router.addEventListener("will-navigate", ({detail})=> { console.log("will-naviga
 router.addEventListener("did-navigate", ({detail})=> { console.info("did-navigate", detail) });
 
 router
-.on("/", function(event, url){
+.on("/", function(event){
   console.log("hello world");
   
   updateMetadata([
@@ -28,8 +28,8 @@ router
 .on("/hello", (event, url) => {
   console.log("hello world!")
 })
-.on("/test", async(event, url) => {
-  console.log(event, url);
+.on("/test", async(event, params) => {
+  console.log(event, params);
   
   updateMetadata([
     { name: "title", content: "Xan - test" },
@@ -39,22 +39,24 @@ router
   ]);
 })
 //Parameterized routes
-.on("/user/:id", (event, url, param) => {
-  const { id } = param;
-  console.log(id);
+.on("/user/:id", (event, { routeParams }) => {
+  console.log(routeParams);
 })
-.on("/user/:id/:subid", (event, url, param) => {
-  const { id, subid } = param;
-  console.log(id, subid);
+.on("/user/:id/:subid", (event, { routeParams }) => {
+  console.log(routeParams);
+})
+//Query parameters
+.on("/target", (event, { searchParams }) => {
+  console.log(searchParams);
 })
 //Options overrides
-.on("/options", (event, url) => {
-  console.log(event, url);
+.on("/options", (event) => {
+  console.log(event);
   event.commit();
 }, { deferredCommit: true })
 //Optional "not found" hook
-.on(404, (event, url) => {
-  console.error("no route found ! (404)");
+.on(404, (event) => {
+  console.error(event, "no route found ! (404)");
 })
 .listen();
 

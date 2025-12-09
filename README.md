@@ -24,22 +24,22 @@ import { Router } from "@xan105/vanilla-router"
 const router = new Router();
 
 router
-.on("/", function(event, url){
+.on("/", function(event, params){
   // do something
 })
-.on("/about", async(event, url) => {
+.on("/about", async(event, params) => {
   // do something
 })
 
 // Parameterized routes
-.on("/user/:id", (event, url, param) => {
-  const { id } = param;
+.on("/user/:id", (event, { routeParams }) => {
+  const { id } = routeParams;
   // do something
 })
 
-// Query parameters
-.on("/items?name=foo", (event, url) => {
-  const name = url.searchParams.get("name");
+// Query parameters (eg: /items?name=foo)
+.on("/items", (event, { searchParams }) => {
+  const { name } = searchParams;
   // do something
 })
 
@@ -55,7 +55,7 @@ router
 })
 
 // Optional "not found" hook
-.on(404, (event, url) => {
+.on(404, () => {
   console.error("not found !");
 })
 
@@ -107,7 +107,7 @@ Create an importmap and add it to your html:
       import { Router } from "@xan105/vanilla-router"
       const router = new Router();
       router
-      .on("/path/to/route", (event, url)=>{
+      .on("/path/to/route", (event, params)=>{
         // Do a flip()
       })
       .listen();
@@ -230,7 +230,7 @@ You should not use this and instead handle it yourself.
 
 ```js
 const router = new Router({ autoFire: false });
-router.on("/", ()=>{ //some route })
+router.on("/", () => { //some route })
 router.listen()
 
 const { redirect } = sessionStorage;
@@ -277,11 +277,11 @@ Please see the 📖 [URLPattern API](https://developer.mozilla.org/en-US/docs/We
 Example:
 
 ```js
-.on("/foo/bar", (event, url, param)=>{
+.on("/foo/bar", (event, params) => {
   //render logic
 })
 
-.on("/articles/:id", async(event, url, param)=>{
+.on("/articles/:id", async(event, params) => {
   //render logic
 })
 ```
@@ -289,37 +289,37 @@ Example:
 Handler function is bind to the following arguments:
 
 ```ts
-handler(event: NavigateEvent, url: URL, param: object)
+handler(event: NavigateEvent, params: { searchParams: object, routeParams: object })
 ```
 
-- `event: NavigateEvent`
+  - `event: NavigateEvent`
 
-The corresponding 📖 [NavigateEvent](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent).<br/>
-This exposes the NavigateEvent object instance and all its goodies.<br/>
-For example if it makes sense to scroll earlier, you can call `event.scroll()` 📖 [NavigateEvent.scroll()](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent/scroll)
+    The corresponding 📖 [NavigateEvent](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent).<br/>
+    This exposes the NavigateEvent object instance and all its goodies.<br/>
 
-- `url: URL` 
+    For example if it makes sense to scroll earlier, you can call `event.scroll()` 
+    📖 [NavigateEvent.scroll()](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent/scroll)
 
-The corresponding 📖 [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) object instance.<br/>
-So you have easy access to things like _href, pathname, searchParams, ..._
+  - `params: { searchParams: object, routeParams: object }`
+    
+    The query and route parameters represented in key/value pairs.
 
-- `param: object`
+    ```js
+    .on("/users/:id/:action", (event, { routeParams }) => {
+      console.log(routeParams); //{ id: "...", action: "..." }
+    })
 
-The parameterized routes have paths that contain dynamic parts _("/articles/:id")_.<br/>
-When using parameterized route `param` will expose said parameter(s) in a key/value pair.
-
-```js
-.on("/user/:id/:action", (event, url, param)=>{
-  console.log(param); //{ id: "...", action: "..." }
-})
-```
+    .on("/items", (event, { searchParams }) => {
+      console.log(searchParams); //{ foo: "bar" }
+    })
+    ```
 
 **Handling no route found**
 
 💡 There is a special route `404` that you can **optionally** add a handler to when you need to handle cases where no match is found.
 
 ```js
-.on(404, (event, url)=>{ 
+.on(404, () => { 
   //no match found
 })
 ```
