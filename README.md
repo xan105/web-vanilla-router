@@ -174,24 +174,24 @@ This event is dispatched when navigation is done.
 
 **Options**
 
-- `autoFocus:? boolean` (true)
+  - `autoFocus:? boolean` (true)
  
   Defines the navigation's focus behavior (automatic or manual).<br/>
   When enabled the browser will focus the first element with the autofocus attribute, or the <body> element if no element has autofocus set.
 
-- `autoScroll:? boolean` (true)
+  - `autoScroll:? boolean` (true)
 
   Defines the navigation's scrolling behavior (automatic or manual).<br/>
   When enabled the browser will handle the scrolling for example restoring the scroll position to the same place as last time if the page is  reloaded or a page in the history is revisited.
 
-- 🧪 `deferredCommit:? boolean` (false)
+  - 🧪 `deferredCommit:? boolean` (false)
 
   The default behavior of immediately "committing" (i.e., updating location.href and navigation.currentEntry) works well for most situations, but some may find they do not want to immediately update the URL.
   When deferred commit is used, the navigation will commit when `event.commit()` is called or when a route's handler fulfills / terminates and `event.commit()` hasn't yet been called (fallback).
 
   NB: 🧪 _Available in Chromium behind the experimental web platform features flag._
 
-- `autoFire:? boolean` (true)
+  - `autoFire:? boolean` (true)
 
   Triggers a navigate event for the current path on a page's first load.<br/>
   The default behavior is intended for when all requests are routed to your SPA.
@@ -241,17 +241,17 @@ This event is dispatched when navigation is done.
   ```
   </details>
 
-- `sensitive?: boolean` (true)
+  - `sensitive?: boolean` (true)
 
   Enables case-insensitive route matching when set to `false`.
 
-- `ignoreAssets?: boolean` (true)
+  - `ignoreAssets?: boolean` (true)
 
   Ignore same-origin assets. 
 
   When `true`, if a same-origin URL has a file extension then the navigation won't be intercepted.
 
-- 🧪 `manualOverride?: boolean` (true)
+  - 🧪 `manualOverride?: boolean` (true)
 
   This library handles when navigation shouldn't be intercepted. But sometimes you just need a manual override!
 
