@@ -176,92 +176,92 @@ This event is dispatched when navigation is done.
 
 - `autoFocus:? boolean` (true)
  
-Defines the navigation's focus behavior (automatic or manual).<br/>
-When enabled the browser will focus the first element with the autofocus attribute, or the <body> element if no element has autofocus set.
+  Defines the navigation's focus behavior (automatic or manual).<br/>
+  When enabled the browser will focus the first element with the autofocus attribute, or the <body> element if no element has autofocus set.
 
 - `autoScroll:? boolean` (true)
 
-Defines the navigation's scrolling behavior (automatic or manual).<br/>
-When enabled the browser will handle the scrolling for example restoring the scroll position to the same place as last time if the page is reloaded or a page in the history is revisited.
+  Defines the navigation's scrolling behavior (automatic or manual).<br/>
+  When enabled the browser will handle the scrolling for example restoring the scroll position to the same place as last time if the page is  reloaded or a page in the history is revisited.
 
 - 🧪 `deferredCommit:? boolean` (false)
 
-The default behavior of immediately "committing" (i.e., updating location.href and navigation.currentEntry) works well for most situations, but some may find they do not want to immediately update the URL.
-When deferred commit is used, the navigation will commit when `event.commit()` is called or when a route's handler fulfills / terminates and `event.commit()` hasn't yet been called (fallback).
+  The default behavior of immediately "committing" (i.e., updating location.href and navigation.currentEntry) works well for most situations, but some may find they do not want to immediately update the URL.
+  When deferred commit is used, the navigation will commit when `event.commit()` is called or when a route's handler fulfills / terminates and `event.commit()` hasn't yet been called (fallback).
 
-NB: 🧪 _Available in Chromium behind the experimental web platform features flag._
+  NB: 🧪 _Available in Chromium behind the experimental web platform features flag._
 
 - `autoFire:? boolean` (true)
 
-Triggers a navigate event for the current path on a page's first load.<br/>
-The default behavior is intended for when all requests are routed to your SPA.
+  Triggers a navigate event for the current path on a page's first load.<br/>
+  The default behavior is intended for when all requests are routed to your SPA.
 
-[Caddy](https://github.com/caddyserver/caddy) example:
+  [Caddy](https://github.com/caddyserver/caddy) example:
 
-```
-foo.com {
-  root * /srv/www/foo.com
-  try_files {path} /index.html
-  file_server
-}
-```
+  ```
+  foo.com {
+    root * /srv/www/foo.com
+    try_files {path} /index.html
+    file_server
+  }
+  ```
 
-If you are using a "400.html" redirect trick like when hosting on Github's Page.
-You should not use this and instead handle it yourself.
+  If you are using a "400.html" redirect trick like when hosting on Github's Page.
+  You should not use this and instead handle it yourself.
 
-<details><summary>Example:</summary>
+  <details><summary>Example:</summary>
 
-**404.html**:
+  **404.html**:
 
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <script>
-      sessionStorage.redirect = location.pathname;
-    </script>
-    <meta http-equiv="refresh" content="0;URL='/'"></meta>
-  </head>
-</html>
-```
+  ```html
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <script>
+        sessionStorage.redirect = location.pathname;
+      </script>
+      <meta http-equiv="refresh" content="0;URL='/'"></meta>
+    </head>
+  </html>
+  ```
 
-**navigation.js**:
+  **navigation.js**:
 
-```js
-const router = new Router({ autoFire: false });
-router.on("/", () => { //some route })
-router.listen()
+  ```js
+  const router = new Router({ autoFire: false });
+  router.on("/", () => { //some route })
+  router.listen()
 
-const { redirect } = sessionStorage;
-delete sessionStorage.redirect;
+  const { redirect } = sessionStorage;
+  delete sessionStorage.redirect;
 
-const url = redirect !== location.pathname ? redirect : "/"
-router.navigate(url, { history: "replace" });
-```
-</details>
+  const url = redirect !== location.pathname ? redirect : "/"
+  router.navigate(url, { history: "replace" });
+  ```
+  </details>
 
 - `sensitive?: boolean` (true)
 
-Enables case-insensitive route matching when set to `false`.
+  Enables case-insensitive route matching when set to `false`.
 
 - `ignoreAssets?: boolean` (true)
 
-Ignore same-origin assets. 
+  Ignore same-origin assets. 
 
-When `true`, if a same-origin URL has a file extension then the navigation won't be intercepted.
+  When `true`, if a same-origin URL has a file extension then the navigation won't be intercepted.
 
 - 🧪 `manualOverride?: boolean` (true)
 
-This library handles when navigation shouldn't be intercepted. But sometimes you just need a manual override!
+  This library handles when navigation shouldn't be intercepted. But sometimes you just need a manual override!
 
-When `true`, every navigation triggered by an element with the `data-navigation` attribute set to `false` won't be intercepted, eg:
+  When `true`, every navigation triggered by an element with the `data-navigation` attribute set to `false` won't be intercepted, eg:
 
-```html
-<a href="/some/server/route/" data-navigation="false">Link</a>
-```
+  ```html
+  <a href="/some/server/route/" data-navigation="false">Link</a>
+  ```
 
-NB: 🧪 _This feature requires the `event.sourceElement` available in Chromium behind the experimental web platform features flag._
+  NB: 🧪 _This feature requires the `event.sourceElement` available in Chromium behind the experimental web platform features flag._
 
 **Methods**
 
