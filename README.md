@@ -24,35 +24,42 @@ import { Router } from "@xan105/vanilla-router"
 const router = new Router();
 
 router
-.on("/", function(event, params){
+.on("/", function(ctx){
   // do something
 })
-.on("/about", async(event, params) => {
+.on("/about", async(ctx) => {
   // do something
 })
 
 // Parameterized routes
-.on("/user/:id", (event, { routeParams }) => {
+.on("/user/:id", ({ routeParams }) => {
   const { id } = routeParams;
   // do something
 })
 
 // Query parameters (eg: /items?name=foo)
-.on("/items", (event, { searchParams }) => {
+.on("/items", ({ searchParams }) => {
   const { name } = searchParams;
   // do something
 })
 
 // Handler redirection
-.on("/admin", function(){
+.on("/admin", ({ redirect }) => {
   if (!isLoggedIn()){
-    this.redirect("/login");
+    redirect("/login");
   }
   // do something
 })
-.on("/login", function(){
+.on("/login", () => {
   // Authenticate
 })
+
+// Deferred commit (don't immediately update the URL)
+.on("/render", async({ event }) => {
+  event.scroll()
+  // do something
+  event.commit();
+}, { deferredCommit: true })
 
 // Optional "not found" hook
 .on(404, () => {
@@ -107,7 +114,7 @@ Create an importmap and add it to your html:
       import { Router } from "@xan105/vanilla-router"
       const router = new Router();
       router
-      .on("/path/to/route", (event, params)=>{
+      .on("/path/to/route", () => {
         // Do a flip()
       })
       .listen();
@@ -265,52 +272,82 @@ This event is dispatched when navigation is done.
 
 **Methods**
 
-#### `on(path: string | number, handler: (async)function): Router`
+#### `on(path: string | number, handler: (async)function, options?: object): Router`
 
 Add a route to the router.<br/>
-
-A route is unique and has one handler.<br/>
-Please see the 📖 [URLPattern API](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API) for possible pattern syntax.
-
-💡 The `on()` method is chainable.
 
 Example:
 
 ```js
-.on("/foo/bar", (event, params) => {
+.on("/foo/bar", (ctx) => {
   //render logic
 })
 
-.on("/articles/:id", async(event, params) => {
+.on("/articles/:id", async({ event, routeParams }) => {
   //render logic
 })
 ```
 
-Handler function is bind to the following arguments:
+A route is unique and has one handler.<br/>
+Please see the 📖 [URLPattern API](https://developer.mozilla.org/en-US/docs/Web/API/URL_Pattern_API) for possible pattern syntax.
+
+You can override some of the router's option per route by passing an option object: 
+
+```options?: {autoFocus, autoScroll, deferredCommit : boolean }```
+
+_Please kindly see the corresponding router's options above for more details._
+
+💡 The `on()` method is chainable.
+
+The handler functions is bind to the following arguments:
 
 ```ts
-handler(event: NavigateEvent, params: { searchParams: object, routeParams: object })
+handler(ctx: { 
+  event: NavigateEvent, 
+  searchParams: object, 
+  routeParams: object,
+  redirect: (url: string) => void
+})
 ```
 
-  - `event: NavigateEvent`
+  - `{ event: NavigateEvent }`
 
     The corresponding 📖 [NavigateEvent](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent).<br/>
-    This exposes the NavigateEvent object instance and all its goodies.<br/>
+    This exposes the NavigateEvent object instance.<br/>
 
     For example if it makes sense to scroll earlier, you can call `event.scroll()` 
     📖 [NavigateEvent.scroll()](https://developer.mozilla.org/en-US/docs/Web/API/NavigateEvent/scroll)
 
-  - `params: { searchParams: object, routeParams: object }`
+  - `{ searchParams: object, routeParams: object }`
     
     The query and route parameters represented in key/value pairs.
 
     ```js
-    .on("/users/:id/:action", (event, { routeParams }) => {
-      console.log(routeParams); //{ id: "...", action: "..." }
+    // /users/foo/slap
+    .on("/users/:id/:action", ({ routeParams }) => {
+      console.log(routeParams); //{ id: "foo", action: "slap" }
     })
-
-    .on("/items", (event, { searchParams }) => {
+    
+    // /items?foo=bar
+    .on("/items", ({ searchParams }) => {
       console.log(searchParams); //{ foo: "bar" }
+    })
+    ```
+
+  - `{ redirect: (url: string) => void }`
+  
+    Redirect to the specified URL by aborting the current navigation, navigating to the URL and replacing the current `NavigationHistoryEntry` (to prevent _"back button loop"_).
+
+    This is a sugar helper function for when you want to redirect from a route handler to another.
+
+    **Example**
+
+    ```js
+    .on("/foo", ({ redirect }) => { 
+      redirect("/bar");
+    })
+    .on("/bar", () => { 
+      console.log("Hello!")
     })
     ```
 
@@ -337,23 +374,6 @@ Remove a route from the router.
 Navigate to the specified url.
 
 Short hand to 📖 [Navigation.navigate()](https://developer.mozilla.org/en-US/docs/Web/API/Navigation/navigate).
-
-#### `redirect(url: string): void`
-
-Redirect to the specified URL by aborting the current navigation, navigating to the URL and replacing the current `NavigationHistoryEntry` (to prevent "back button loop").
-
-This is a sugar helper function for when you want to redirect from a route handler to another.
-
-**Example**
-
-```js
-.on("/foo", function(){ 
-  this.redirect("/bar");
-})
-.on("/bar", function(){ 
-  console.log("Hello!")
-})
-```
 
 #### `back(): void | object`
 

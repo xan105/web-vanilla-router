@@ -12,7 +12,7 @@ router.addEventListener("will-navigate", ({detail})=> { console.log("will-naviga
 router.addEventListener("did-navigate", ({detail})=> { console.info("did-navigate", detail) });
 
 router
-.on("/", function(event){
+.on("/", function(){
   console.log("hello world");
   
   updateMetadata([
@@ -22,14 +22,14 @@ router
     { name: "type", content: "website" }
   ]);
 })
-.on("/redirect", function(){
-  this.redirect("/hello");
+.on("/redirect", ({ redirect })=>{
+  redirect("/hello");
 })
-.on("/hello", (event, url) => {
+.on("/hello", () => {
   console.log("hello world!")
 })
-.on("/test", async(event, params) => {
-  console.log(event, params);
+.on("/test", async(ctx) => {
+  console.log(ctx);
   
   updateMetadata([
     { name: "title", content: "Xan - test" },
@@ -39,23 +39,23 @@ router
   ]);
 })
 //Parameterized routes
-.on("/user/:id", (event, { routeParams }) => {
+.on("/user/:id", ({ routeParams }) => {
   console.log(routeParams);
 })
-.on("/user/:id/:subid", (event, { routeParams }) => {
+.on("/user/:id/:subid", ({ routeParams }) => {
   console.log(routeParams);
 })
 //Query parameters
-.on("/target", (event, { searchParams }) => {
+.on("/target", ({ searchParams }) => {
   console.log(searchParams);
 })
 //Options overrides
-.on("/options", (event) => {
-  console.log(event);
+.on("/options", (ctx) => {
+  console.log(ctx);
   event.commit();
 }, { deferredCommit: true })
 //Optional "not found" hook
-.on(404, (event) => {
+.on(404, ({ event }) => {
   console.error(event, "no route found ! (404)");
 })
 .listen();
