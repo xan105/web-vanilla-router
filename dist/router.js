@@ -94,10 +94,6 @@ var Router = class extends EventTarget {
   navigate(url, options) {
     return navigation.navigate(url, options);
   }
-  redirect(url) {
-    navigation.navigate(url, { history: "replace" });
-    throw new DOMException("Abort", "AbortError");
-  }
   on(path, handler, options = {}) {
     if (typeof handler !== "function") return this;
     if (typeof path === "string" && path.length > 0) {
@@ -116,16 +112,14 @@ var Router = class extends EventTarget {
     return this;
   }
   #match(path) {
-    if (this.sensitive === true) {
-      if (Object.hasOwn(this.#routes, path)) {
-        return this.#routes[path];
-      }
+    if (this.sensitive === true && Object.hasOwn(this.#routes, path)) {
+      return this.#routes[path];
     }
     for (const [route, { handler, options }] of Object.entries(this.#routes)) {
       const pattern = new URLPattern({ pathname: route }, { ignoreCase: this.sensitive === false });
       const match = pattern.exec({ pathname: path });
       if (match) {
-        return { handler, options, param: match.pathname.groups };
+        return { handler, options, routeParams: match.pathname.groups };
       } else {
         continue;
       }
@@ -149,7 +143,7 @@ var Router = class extends EventTarget {
       if (!e.canIntercept || e.hashChange || e.downloadRequest || e.formData || this.manualOverride && e.sourceElement?.dataset?.navigation === "false") return;
       const url = new URL(e.destination.url);
       if (this.ignoreAssets === true && /\.[^/]+$/.test(url.pathname)) return;
-      const { handler, options, param } = this.#match(url.pathname) ?? {};
+      const { handler, options, routeParams } = this.#match(url.pathname) ?? {};
       if (!handler) {
         this.dispatchEvent(new CustomEvent("error", {
           detail: { error: "No handler found !", url }
@@ -163,7 +157,15 @@ var Router = class extends EventTarget {
         focusReset: (options?.autoFocus ?? this.autoFocus) === true ? "after-transition" : "manual",
         scroll: (options?.autoScroll ?? this.autoScroll) === true ? "after-transition" : "manual",
         commit: (options?.deferredCommit ?? this.deferredCommit) === true ? "after-transition" : "immediate",
-        handler: handler.bind(this, e, url, param ?? {})
+        handler: handler.bind(this, Object.freeze({
+          event: e,
+          searchParams: Object.fromEntries(url.searchParams.entries()),
+          routeParams: routeParams ?? {},
+          redirect: function(url2) {
+            navigation.navigate(url2, { history: "replace" });
+            throw new DOMException("Abort", "AbortError");
+          }
+        }))
       });
     });
     if (this.autoFire === true) {
