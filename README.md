@@ -268,7 +268,7 @@ This event is dispatched when navigation is done.
   <a href="/some/server/route/" data-navigation="false">Link</a>
   ```
 
-  NB: 🧪 _This feature requires the `event.sourceElement` available in Chromium behind the experimental web platform features flag._
+  NB: 🧪 _This feature requires `event.sourceElement`._
 
 **Methods**
 
