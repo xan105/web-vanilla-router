@@ -14,25 +14,11 @@ router.addEventListener("did-navigate", ({detail})=> { console.info("did-navigat
 router
 .on("/", function(){
   console.log("hello world");
-  
-  updateMetadata([
-    { name: "title", content: "Xan" },
-    { name: "description", content: "Lorem Ipsum" },
-    { name: "url", content: "http://localhost" },
-    { name: "type", content: "website" }
-  ]);
-})
-.on("/redirect", ({ redirect })=>{
-  redirect("/hello");
-})
-.on("/hello", () => {
-  console.log("hello world!")
 })
 .on("/test", async(ctx) => {
   console.log(ctx);
-  
   updateMetadata([
-    { name: "title", content: "Xan - test" },
+    { name: "title", content: "Xan" },
     { name: "description", content: "Lorem Ipsum" },
     { name: "url", content: "http://localhost" },
     { name: "type", content: "website" }
@@ -50,13 +36,23 @@ router
   console.log(searchParams);
 })
 //Options overrides
-.on("/options", (ctx) => {
+.on("/options", async (ctx) => {
   console.log(ctx);
-  event.commit();
+  console.log("waiting 5sec...");
+  await new Promise((r) => {
+    setTimeout(r, 5000);
+  });
+  console.log("done");
 }, { deferredCommit: true })
 //Optional "not found" hook
 .on(404, ({ event }) => {
   console.error(event, "no route found ! (404)");
+})
+.on("/redirect", ({ redirect })=>{
+  redirect("/hello");
+})
+.on("/hello", () => {
+  console.log("hello world!")
 })
 .listen();
 
