@@ -139,33 +139,36 @@ var Router = class extends EventTarget {
         detail: { url }
       }));
     });
-    navigation.addEventListener("navigate", (e) => {
-      if (!e.canIntercept || e.hashChange || e.downloadRequest || e.formData || this.manualOverride && e.sourceElement?.dataset?.navigation === "false") return;
-      const url = new URL(e.destination.url);
+    navigation.addEventListener("navigate", (event) => {
+      if (!event.canIntercept || event.hashChange || event.downloadRequest || event.formData || this.manualOverride && event.sourceElement?.dataset?.navigation === "false") return;
+      const url = new URL(event.destination.url);
       if (this.ignoreAssets === true && /\.[^/]+$/.test(url.pathname)) return;
-      const { handler, options, routeParams } = this.#match(url.pathname) ?? {};
-      if (!handler) {
-        this.dispatchEvent(new CustomEvent("error", {
-          detail: { error: "No handler found !", url }
-        }));
-        return;
-      }
       this.dispatchEvent(new CustomEvent("will-navigate", {
         detail: { url }
       }));
-      e.intercept({
-        focusReset: (options?.autoFocus ?? this.autoFocus) === true ? "after-transition" : "manual",
-        scroll: (options?.autoScroll ?? this.autoScroll) === true ? "after-transition" : "manual",
-        commit: (options?.deferredCommit ?? this.deferredCommit) === true ? "after-transition" : "immediate",
-        handler: handler.bind(this, Object.freeze({
-          event: e,
-          searchParams: Object.fromEntries(url.searchParams.entries()),
-          routeParams: routeParams ?? {},
-          redirect: function(url2) {
-            navigation.navigate(url2, { history: "replace" });
-            throw new DOMException("Abort", "AbortError");
-          }
-        }))
+      const { handler, options, routeParams } = this.#match(url.pathname) ?? {};
+      const focusReset = (options?.autoFocus ?? this.autoFocus) === true;
+      const scroll = (options?.autoScroll ?? this.autoScroll) === true;
+      const deferredCommit = event.cancelable && (options?.deferredCommit ?? this.deferredCommit) === true;
+      event.intercept({
+        focusReset: focusReset ? "after-transition" : "manual",
+        scroll: scroll ? "after-transition" : "manual",
+        [deferredCommit ? "precommitHandler" : "handler"]: async function(controller) {
+          if (!handler) throw new Error(`No route handler found!`);
+          await handler(Object.freeze({
+            event,
+            searchParams: Object.fromEntries(url.searchParams.entries()),
+            routeParams: routeParams ?? {},
+            redirect: function(url2) {
+              if (controller && controller instanceof NavigationPrecommitController) {
+                controller.redirect(url2, { history: "replace" });
+              } else {
+                navigation.navigate(url2, { history: "replace" });
+                throw new DOMException("Abort", "AbortError");
+              }
+            }
+          }));
+        }
       });
     });
     if (this.autoFire === true) {
