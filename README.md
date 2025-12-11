@@ -57,8 +57,7 @@ router
 // Deferred commit (don't immediately update the URL)
 .on("/render", async({ event }) => {
   event.scroll()
-  // do something
-  event.commit();
+  await fetch("/foo/bar", { signal: event.signal });
 }, { deferredCommit: true })
 
 // Optional "not found" hook
@@ -173,7 +172,7 @@ This event is dispatched when an error has occured.
 
 `will-navigate({ detail: { url: URL } })`
 
-This event is dispatched when the router is about to navigate to one of its route.
+This event is dispatched when navigation is about to be intercepted.
 
 `did-navigate({ detail: { url: URL } })`
 
@@ -193,10 +192,8 @@ This event is dispatched when navigation is done.
 
   - 🧪 `deferredCommit:? boolean` (false)
 
-  The default behavior of immediately "committing" (i.e., updating location.href and navigation.currentEntry) works well for most situations, but some may find they do not want to immediately update the URL.
-  When deferred commit is used, the navigation will commit when `event.commit()` is called or when a route's handler fulfills / terminates and `event.commit()` hasn't yet been called (fallback).
-
-  NB: 🧪 _Available in Chromium behind the experimental web platform features flag._
+  The default behavior of immediately "committing" (i.e., updating `location.href` and `navigation.currentEntry`) works well for most situations, but some may find they do not want to immediately update the URL.
+  When deferred commit is used, the navigation will commit when a route's handler fulfills / terminates.
 
   - `autoFire:? boolean` (true)
 
@@ -361,7 +358,7 @@ handler(ctx: {
 })
 ```
 
-If you do not add a handler to this special route navigation won't be intercepted.
+If no handler is added, the navigation is marked as failed and an error is thrown.
 
 #### `off(path: string | number): Router`
 
