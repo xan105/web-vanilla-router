@@ -244,7 +244,7 @@ This event is dispatched when navigation is done.
   router.navigate(url, { history: "replace" });
   ```
   </details>
-
+  
   - `sensitive?: boolean` (true)
 
   Enables case-insensitive route matching when set to `false`.
@@ -254,6 +254,10 @@ This event is dispatched when navigation is done.
   Ignore same-origin assets. 
 
   When `true`, if a same-origin URL has a file extension then the navigation won't be intercepted.
+  
+  - `directoryIndex?: string[]` ("index.html")
+  
+  If a same-origin URL points directly to a directory index file (for example `/index.html`), the router normalizes it to its directory form (`/`) before navigation. This prevents index-file URLs from being treated as asset requests and ensures a single canonical route.
 
   - 🧪 `manualOverride?: boolean` (true)
 
