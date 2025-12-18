@@ -71,6 +71,7 @@ var Router = class extends EventTarget {
     this.autoFire = option?.autoFire ?? true;
     this.sensitive = option?.sensitive ?? true;
     this.ignoreAssets = option?.ignoreAssets ?? true;
+    this.directoryIndex = Array.isArray(option?.directoryIndex) ? option.directoryIndex : ["index.html"];
     this.manualOverride = option?.manualOverride ?? true;
     this.autoFocus = option?.autoFocus ?? true;
     this.autoScroll = option?.autoScroll ?? true;
@@ -111,6 +112,14 @@ var Router = class extends EventTarget {
     }
     return this;
   }
+  #normalize(path) {
+    for (const filename of this.directoryIndex) {
+      if (typeof filename === "string" && path.endsWith("/" + filename)) {
+        return path.slice(0, -filename.length);
+      }
+    }
+    return path;
+  }
   #match(path) {
     if (this.sensitive === true && Object.hasOwn(this.#routes, path)) {
       return this.#routes[path];
@@ -142,6 +151,7 @@ var Router = class extends EventTarget {
     navigation.addEventListener("navigate", (event) => {
       if (!event.canIntercept || event.hashChange || event.downloadRequest || event.formData || this.manualOverride && event.sourceElement?.dataset?.navigation === "false") return;
       const url = new URL(event.destination.url);
+      url.pathname = this.#normalize(url.pathname);
       if (this.ignoreAssets === true && /\.[^/]+$/.test(url.pathname)) return;
       this.dispatchEvent(new CustomEvent("will-navigate", {
         detail: { url }
