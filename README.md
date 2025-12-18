@@ -257,11 +257,11 @@ This event is dispatched when navigation is done.
   
   - `directoryIndex?: string[]` ("index.html")
   
-  If a same-origin URL points directly to a directory index file (for example `/index.html`), the router normalizes it to its directory form (`/`) before navigation. This prevents index-file URLs from being treated as asset requests and ensures a single canonical route.
+  If a same-origin URL points directly to a directory index file (for example `/index.html`), the router normalizes it to its directory form (`/`) internally. This prevents index-file URLs from being treated as asset requests and ensures a single canonical route.
 
   - 🧪 `manualOverride?: boolean` (true)
 
-  This library handles when navigation shouldn't be intercepted. But sometimes you just need a manual override!
+  The router handles when navigation shouldn't be intercepted. But sometimes you just need a manual override!
 
   When `true`, every navigation triggered by an element with the `data-navigation` attribute set to `false` won't be intercepted, eg:
 
