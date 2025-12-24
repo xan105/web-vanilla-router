@@ -3,7 +3,7 @@ About
 
 Simple and modern Vanilla JS router based on the 📖 [Navigation API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_API) and 📖 [URLPattern API](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern).
 
-<img align="left" width="128" height="128" src="https://github.com/xan105/web-vanilla-router/raw/main/logo.png">
+<img align="left" width="89" height="128" src="https://github.com/xan105/web-vanilla-router/raw/main/logo.png">
 
 - Dependency free.
 - Parameterized routes and URL pattern matchers.
