@@ -1,8 +1,3 @@
-if (!("navigation" in window)) {
-  await import("@virtualstate/navigation/polyfill");
-  console.log("Using @virtualstate/navigation polyfill!");
-}
-
 import { Router, updateMetadata } from "@xan105/vanilla-router";
 
 const router = new Router({ autoFire: false });

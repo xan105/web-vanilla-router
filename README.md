@@ -122,37 +122,6 @@ Create an importmap and add it to your html:
 </html>
 ```
 
-Compatibility
-=============
-
-As of this writing, Firefox and Safari still [lacks support for the Navigation API](https://caniuse.com/mdn-api_navigation).
-
-I recommend the excellent Navigation API shim: [@virtualstate/navigation](https://github.com/virtualstate/navigation) in the meantime.
-
-**Install & build**
-
-```console
-npm i -D @virtualstate/navigation esbuild
-npx esbuild "./node_modules/@virtualstate/navigation/esnext/polyfill.js" --bundle --minify --legal-comments=none --platform=browser --target=esnext --format=esm --outfile="navigation.min.js"
-```
-
-**Usage (Via importmap)**
-
-```html
-    <script type="importmap">
-    {
-      "imports": {
-        "@virtualstate/navigation/polyfill": "./navigation.min.js"
-      }
-    }
-    </script>
-    <script type="module">
-      if (!("navigation" in window)) await import("@virtualstate/navigation/polyfill");
-    </script>
-  </body>
-</html>
-```
-
 API
 ===
 
