@@ -68,26 +68,6 @@ router
 .listen();
 ```
 
-OpenGraph - Metadata
-
-```js
-import { Router, updateMetadata } from "@xan105/vanilla-router"
-
-const router = new Router();
-
-router.on("/blog/:id", () => {
-  updateMetadata([
-    { name: "title", content: "My website" },
-    { name: "type", content: "article", details: { 
-      modified_time: "2025-01-21T00:00:00Z",
-      section : "Technology"
-    }}
-  ]);
-  
-  // do something
-}).listen();
-```
-
 Install
 =======
 
@@ -159,7 +139,7 @@ This event is dispatched when navigation is done.
   Defines the navigation's scrolling behavior (automatic or manual).<br/>
   When enabled the browser will handle the scrolling for example restoring the scroll position to the same place as last time if the page is  reloaded or a page in the history is revisited.
 
-  - 🧪 `deferredCommit:? boolean` (false)
+  - `deferredCommit:? boolean` (false)
 
   The default behavior of immediately "committing" (i.e., updating `location.href` and `navigation.currentEntry`) works well for most situations, but some may find they do not want to immediately update the URL.
   When deferred commit is used, the navigation will commit when a route's handler fulfills / terminates.
@@ -228,7 +208,7 @@ This event is dispatched when navigation is done.
   
   If a same-origin URL points directly to a directory index file (for example `/index.html`), the router normalizes it to its directory form (`/`) internally. This prevents index-file URLs from being treated as asset requests and ensures a single canonical route.
 
-  - 🧪 `manualOverride?: boolean` (true)
+  - `manualOverride?: boolean` (true)
 
   The router handles when navigation shouldn't be intercepted. But sometimes you just need a manual override!
 
@@ -237,8 +217,6 @@ This event is dispatched when navigation is done.
   ```html
   <a href="/some/server/route/" data-navigation="false">Link</a>
   ```
-
-  NB: 🧪 _This feature requires `event.sourceElement`._
 
 **Methods**
 
@@ -384,6 +362,11 @@ Update the document's metadata: title, description and Open Graph protocol.
 Example:
 
 ```js
+import { Router, updateMetadata } from "@xan105/vanilla-router"
+
+const router = new Router();
+
+router.on("/", () => {
   updateMetadata([
     { name: "title", content: "Xan" },
     { name: "description", content: "Lorem Ipsum" },
@@ -391,6 +374,7 @@ Example:
     { name: "url", content: "http://localhost" },
     { name: "type", content: "website" }
   ]);
+}).listen();
 ```
 
 ⬇️
